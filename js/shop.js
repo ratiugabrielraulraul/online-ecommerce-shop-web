@@ -39,8 +39,39 @@ window.Shop = {
                     </div>
                 </div>
             </div>`
+    },
+    addProductToCart(productId) {
+        var customerId = 1;
+        var requestBody = {
+            customerId: customerId, productId: productId
+        };
+
+        $.ajax({
+            url:Shop.API_BASE_URL + "/carts",
+            method: "PUT",
+            contentType: "application/json",
+            data: JSON.stringify(requestBody)
+
+
+        }).done(function () {
+            window.location.replace("cart.html");
+        })
+    },
+
+    bindEvents:function () {
+        $('.single-product-area .row').delegate('.add_to_cart_button', 'click', function () {
+            event.preventDefault();
+            var productId = $(this).
+            data('product_id');
+            Shop.addProductToCart(productId);
+
+        });
     }
+
+        
+
 
 
 };
 Shop.getProducts();
+Shop.bindEvents();
