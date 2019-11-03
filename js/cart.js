@@ -18,7 +18,8 @@ window.Cart = {
 
         products.forEach(product =>allProductsHtml += Cart.getProductHtml(product));
         $(".shop_table.cart tbody").html(allProductsHtml);
-
+        Cart.addMinusButton();
+        Cart.addPlusButton();
     },
 
 
@@ -53,6 +54,21 @@ window.Cart = {
                                             </td>
                                         </tr>`
     },
+    addPlusButton: function () {
+        $('.plus').on('click', function () {
+            var currentValue = $('input.input-text').val(),
+                nextValue = parseInt(currentValue) + 1;
+            $('input.input-text').val(nextValue);
+        });
+    },
+    addMinusButton: function () {
+        $('.minus').on('click', function () {
+            var currentValue = $('input.input-text').val(),
+                nextValue = parseInt(currentValue - 1);
+            $('input.input-text').val(nextValue);
+        });
+    }
+
 
 
 
