@@ -16,7 +16,7 @@ window.Shop = {
     displayProducts: function (products) {
         var allProductsHtml = "";
 
-        products.forEach(product =>allProductsHtml += Shop.getProductHtml(product));
+        products.forEach(product => allProductsHtml += Shop.getProductHtml(product));
         $(".single-product-area .row").html(allProductsHtml);
 
     },
@@ -41,7 +41,7 @@ window.Shop = {
             </div>`
     },
     addProductToCart(productId) {
-        var customerId = 1;
+        var customerId = 15;
         var requestBody = {
             customerId: customerId, productId: productId
         };
