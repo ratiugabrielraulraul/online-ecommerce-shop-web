@@ -25,7 +25,7 @@ window.Cart = {
     getProductHtml: function (product) {
         return `<tr class="cart_item id-${product.id}">
                                             <td class="product-remove">
-                                                <a title="Remove this item" class="remove" href="#">×</a> 
+                                                <a title="Remove this item" class="remove" data-product_id="${product.id}" onclick="" href="#">×</a> 
                                             </td>
 
                                             <td class="product-thumbnail">
@@ -63,6 +63,20 @@ window.Cart = {
             nextValue = parseInt(currentValue - 1);
         $(`.product-quantity-${id}`).find('input.input-text').val(nextValue);
     },
+
+    deleteProduct: function (productId) {
+        $.ajax({
+            url:Cart.API_BASE_URL + "/carts/" + 15,
+            method:"DELETE"
+        }).done(function (response) {
+            console.log(response);
+            Cart.displayProducts(response.products);
+        })
+
+    },
+
+
+
     addcheckout: function () {
         return ` <tr>
                                             <td class="actions" colspan="6">
@@ -75,7 +89,11 @@ window.Cart = {
                                                 <input type="submit" value="Proceed to Checkout" name="proceed" class="checkout-button button alt wc-forward">
                                             </td>
                                         </tr>`;
-    }
+    },
+
+
+
+
 
 
 
