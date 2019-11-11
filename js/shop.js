@@ -2,23 +2,19 @@ window.Shop = {
 
     API_BASE_URL: "http://localhost:8084",
 
-
     getProducts: function () {
         $.ajax({
             url:Shop.API_BASE_URL + "/products",
             method:"GET"
-        }).done(function (response) {
-            console.log(response);
+        }).success(function (response) {
             Shop.displayProducts(response.content);
         })
 
     },
     displayProducts: function (products) {
         var allProductsHtml = "";
-
         products.forEach(product => allProductsHtml += Shop.getProductHtml(product));
         $(".single-product-area .row").html(allProductsHtml);
-
     },
     
 
@@ -26,11 +22,11 @@ window.Shop = {
         return `<div class="col-md-3 col-sm-6">
                 <div class="single-shop-product">
                     <div class="product-upper">
-                        <img src="img/product-2.jpg" alt="">
+                        <img src="${product.imagePath}" alt="">
                     </div>
                     <h2><a href="">${product.name}</a></h2>
                     <div class="product-carousel-price">
-                        <ins>$${product.price}</ins>   
+                        <ins>${product.price} </ins>   
                     </div>
 
                     <div class="product-option-shop">

@@ -5,8 +5,8 @@ window.Cart = {
 
     getProducts: function () {
         $.ajax({
-            url:Cart.API_BASE_URL + "/carts/" + 15,
-            method:"GET"
+            url: Cart.API_BASE_URL + "/carts/" + 15,
+            method: "GET"
         }).done(function (response) {
             console.log(response);
             Cart.displayProducts(response.products);
@@ -25,11 +25,12 @@ window.Cart = {
     getProductHtml: function (product) {
         return `<tr class="cart_item id-${product.id} ${product.id}">
                                             <td class="product-remove">
+                                            <input class="itemId" type="hidden" value="${product.id}">
                                                 <a title="Remove this item" class="remove" data-product_id="${product.id}" onclick="Cart.deleteProduct(${product.id}); return false;" href="#">×</a> 
                                             </td>
 
                                             <td class="product-thumbnail">
-                                                <a href="single-product.html"><img width="145" height="145" alt="poster_1_up" class="shop_thumbnail" src="img/product-thumb-2.jpg"></a>
+                                                <a href="single-product.html"><img width="145" height="145" alt="poster_1_up" class="shop_thumbnail" src="${product.imagePath}"></a>
                                             </td>
 
                                             <td class="product-name">
@@ -37,13 +38,13 @@ window.Cart = {
                                             </td>
 
                                             <td class="product-price">
-                                                <span class="amount">£${product.price}</span> 
+                                                <span class="amount">${product.price} Lei</span> 
                                             </td>
 
                                             <td class="product-quantity-${product.id}">
                                                 <div class="quantity buttons_added">
                                                     <input type="button" class="minus" value="-" onclick="Cart.addMinusButton(${product.id}); return false;">
-                                                    <input type="number" size="4" class="input-text qty${product.id} text" title="Qty" value="${product.quantity}" min="0" step="1">
+                                                    <input type="number" size="4" class="input-text qty text" title="Qty" value="${product.quanitity}" min="0" step="1">
                                                     <input type="button" class="plus" value="+" onclick="Cart.addPlusButton(${product.id}); return false;">
                                                 </div>
                                             </td>
@@ -66,29 +67,37 @@ window.Cart = {
     deleteProduct: function (productId) {
         console.log(productId);
         $.ajax({
-            url:Cart.API_BASE_URL + "/carts/remove/15/" + productId,
-            method:"DELETE"
+            url: Cart.API_BASE_URL + "/carts/remove/15/" + productId,
+            method: "DELETE"
         }).done(function (response) {
-            console.log(response);
             $(`.${productId}`).html('');
             // Cart.displayProducts(response.products);
         })
     },
-    updateProductCount: function(productId) {
-        var count = $(`.qty${productId}`).val();
-        $.ajax({
-            url:Cart.API_BASE_URL + "/carts/update/count/15/" + productId + "/" + count,
-            method:"PUT"
-        }).done(function (response) {
-            console.log(response);
-            // $(`.${productId}`).html('');
-            // Cart.displayProducts(response.products);
+    updateProductCount: function () {
+        let items = $('.cart_item');
+        items.each(function () {
+            var id = $(this).find('.itemId').val(),
+                count = $(this).find('.qty').val();
+            Cart.updateSingleProduct(id, count);
         })
     },
+    updateSingleProduct: (productId, count) => {
+        var reqBody = {
+            productId: productId,
+            count: count,
+        };
 
-
-
-    addcheckout: function (productId) {
+        $.ajax({
+            url: Cart.API_BASE_URL + "/carts/update/count/15",
+            method: "PUT",
+            data: JSON.stringify(reqBody),
+            contentType: "application/json",
+        }).done(function (response) {
+            console.log(response);
+        })
+    },
+    addcheckout: function () {
         return ` <tr>
                                             <td class="actions" colspan="6">
                                                 <div class="coupon">
@@ -96,20 +105,16 @@ window.Cart = {
                                                     <input type="text" placeholder="Coupon code" value="" id="coupon_code" class="input-text" name="coupon_code">
                                                     <input type="submit" value="Apply Coupon" name="apply_coupon" class="button">
                                                 </div>
-                                                <input type="submit" onclick="Cart.updateProductCount(${productId}); return false;" value="Update Cart" name="update_cart" class="button">
-                                                <input type="submit" value="Proceed to Checkout" name="proceed" class="checkout-button button alt wc-forward">
+                                                <button type="button" onclick="Cart.updateProductCount();" class="add_to_cart_button" style="padding: 11px 20px;margin-right: 10px">Update</button>
+                                                <input type="submit" onclick="Cart.proceedToCheckout(); return false;" value="Proceed to Checkout" name="proceed"  id="4" class="checkout-button button alt wc-forward">
                                             </td>
                                         </tr>`;
     },
 
+    proceedToCheckout: function () {
+        location.href = ("http://localhost:63342/online-ecommerce-shop-web/checkout.html");
 
-
-
-
-
-
-
-
+    }
 
 
 };
